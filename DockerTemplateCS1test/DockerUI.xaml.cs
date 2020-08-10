@@ -180,6 +180,7 @@ namespace DockerTemplateCS1test
                                 
                                     this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
                                 }
+                                //helloo
                                 xI += 0.1624;
                                 //else
                                 //{
