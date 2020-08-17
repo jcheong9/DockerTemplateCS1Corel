@@ -149,7 +149,7 @@ namespace DockerTemplateCS1test
 
                     Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
                     //for (int i = 0; i < filePaths.Length; i++)
-                    double xI = 2.17, xO, yI = 8.35, yO = 8.4, xSS, ySS = 8.46;
+                    double xI = 2.17, xO,xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS = 8.46;
                     for (int i = 0; i < 10; i++)
                     {
                         Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
@@ -167,18 +167,26 @@ namespace DockerTemplateCS1test
                         if (countLabel >= 5)
                         {
                             xI = 6.265;
+                            xp = 6.12;
+                            xO = 4.76;
                         }
                         else{
                             xI = 2.48;
+                            xp = 2.34;
+                            xO = 0.98;
                         }
 
                         if (countLabel == 5)
                         {
-                            yI = 8.35;
-                            yO = 8.4;
+                            yI = 8.335;
+                            yp = 9;
+                            yO = 8.415;
                             ySS = 8.46;
                         }
-                        for (int rowIndex = 5; rowIndex < numRowsInput; rowIndex++)
+
+                        //put panel number to coreldraw
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xp, yp, cellPanelNumber.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xp, yp);
+                        for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
                         {
                             cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
                             cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
@@ -190,45 +198,41 @@ namespace DockerTemplateCS1test
                                 {
 
                                 
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
+                                    xI += 0.1624;
                                 }
                                 //helloo
-                                xI += 0.1624;
-                                //else
-                                //{
-                                //    if (strInOut.ToLower().Contains('s'))
-                                //    {
-                                //        if (countLabel < 5)
-                                //        {
-                                //            xSS = 2.48 + 0.1624 * 7;
-                                //        }
-                                //        else
-                                //        {
-                                //            xSS = 6.265 + 0.1624 * 7;
-                                //        }
+      
+                                else
+                                {
+                                    //if (strInOut.ToLower().Contains('s'))
+                                    //{
+                                    //    if (countLabel < 5)
+                                    //    {
+                                    //        xSS = 2.48 + 0.1624 * 7;
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        xSS = 6.265 + 0.1624 * 7;
+                                    //    }
 
-                                //        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, ySS, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, ySS);
-                                //    }
-                                //    else
-                                //    {
-                                //        if (countLabel < 5)
-                                //        {
-                                //            xO = 0.98;
-                                //        }
-                                //        else
-                                //        {
-                                //            xO = 4.78;
-                                //        }
+                                    //    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, ySS, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, ySS);
+                                    //}
+                                    //else
+                                    //{
 
-                                //        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
-                                //        xO += 0.1624;
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
+                                        xO += 0.1624;
 
-                                //    }
-                                //}
-
+                                    //}
+                                }
+                                
+                                
                             }
                         }
                         yI -= 1.65;
+                        yp -= 1.65;
+                        yO -= 1.65;
                         countLabel++;
 
 
