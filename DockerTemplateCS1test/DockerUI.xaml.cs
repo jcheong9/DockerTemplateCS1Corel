@@ -133,20 +133,21 @@ namespace DockerTemplateCS1test
                 //popluate machpro zone
                 btn_MachProZone.Click += (s, e) => {
                     int countLabel = 0;
-                    //23 xls / 10 = 2.3 round up = 3 - 1 = 2 
-                    string[] filePaths = Directory.GetFiles(@"E:\pointlist\machprozone");
-                    //Pages pages = this.corelApp.ActiveDocument.Pages;
-                    //Layers allLayers = pages[3].Layers;
-                    ////copy and paste to other pages
-                    //allLayers.Bottom.Shapes.All().Copy();
-                    //int numpg = (int)(Math.Ceiling(filePaths.Length / 10.0)-1); 
-                    //this.corelApp.ActiveDocument.InsertPages(numpg, false, 3);
-                    //for (int j = 1; j < numpg+1; j++)
-                    //{
-                    //    pages[3+j].ActiveLayer.Paste();
 
-                    //}
+                    //23 xls / 10 = 2.3 round up = 3 - 1 = 2  .Where(x => x.StartsWith("Panel"))
+                    string[] filePaths = Directory.GetFiles(@"E:\pointlist\machprozone"); 
+                    Pages pages = this.corelApp.ActiveDocument.Pages;
+                    Layers allLayers = pages[3].Layers;
+                    //copy and paste to other pages
+                    allLayers.Bottom.Shapes.All().Copy();
+                    int numpg = (int)(Math.Ceiling(filePaths.Length / 10.0) - 1);
+                    this.corelApp.ActiveDocument.InsertPages(numpg, false, 3);
+                    for (int j = 1; j < numpg + 1; j++)
+                    {
+                        pages[3 + j].ActiveLayer.Paste();
 
+                    }
+                    pages[3].Activate();
                     Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
                     //for (int i = 0; i < filePaths.Length; i++)
                     double xI = 2.17, xO,xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS = 8.46;
