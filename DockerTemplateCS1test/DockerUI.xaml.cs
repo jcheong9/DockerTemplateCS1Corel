@@ -169,11 +169,13 @@ namespace DockerTemplateCS1test
                             xI = 6.265;
                             xp = 6.12;
                             xO = 4.76;
+                            xSS = 6.265 + 0.1624 * 7;
                         }
                         else{
                             xI = 2.48;
                             xp = 2.34;
                             xO = 0.98;
+                            xSS = 2.48 + 0.1624 * 7;
                         }
 
                         if (countLabel == 5)
@@ -181,7 +183,7 @@ namespace DockerTemplateCS1test
                             yI = 8.335;
                             yp = 9;
                             yO = 8.415;
-                            ySS = 8.46;
+                            ySS = 8.335;
                         }
 
                         //put panel number to coreldraw
@@ -205,26 +207,18 @@ namespace DockerTemplateCS1test
       
                                 else
                                 {
-                                    //if (strInOut.ToLower().Contains('s'))
-                                    //{
-                                    //    if (countLabel < 5)
-                                    //    {
-                                    //        xSS = 2.48 + 0.1624 * 7;
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        xSS = 6.265 + 0.1624 * 7;
-                                    //    }
+                                    if (strInOut.ToLower().Contains('s'))
+                                    {
 
-                                    //    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, ySS, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, ySS);
-                                    //}
-                                    //else
-                                    //{
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, yI);
+                                    }
+                                    else
+                                    {
 
                                         this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
                                         xO += 0.1624;
 
-                                    //}
+                                    }
                                 }
                                 
                                 
