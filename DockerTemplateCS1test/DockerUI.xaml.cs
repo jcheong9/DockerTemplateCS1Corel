@@ -130,6 +130,9 @@ namespace DockerTemplateCS1test
                     }
 
                 };
+
+
+
                 //popluate machpro zone
                 btn_MachProZone.Click += (s, e) => {
                     int countLabel = 0;
@@ -341,7 +344,7 @@ namespace DockerTemplateCS1test
                         name = name.Replace(' ' , '_');
                         listnamespg.Add(name);
                     }
-                    Console.Write("hello");
+
                     opt.AntiAliasingType = cdrAntiAliasingType.cdrNormalAntiAliasing;
                     opt.Transparent = true;
                     opt.ImageType = cdrImageType.cdrRGBColorImage;
@@ -359,35 +362,10 @@ namespace DockerTemplateCS1test
                         this.corelApp.ActiveDocument.Export(@"C:\JOBS\DNV - Parkgate\graphics\graphic pics\" + listnamespg[k] + ".png", cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, opt);
                     }
                 };
-
-                btn_ExportAllPgMAPPNG.Click += (s, e) =>
+                btn_InputOutputs.Click += (s, e) =>
                 {
-                    Pages pages = this.corelApp.ActiveDocument.Pages;
-                    string name;
-                    List<string> listnamespg = new List<string>();
-                    StructExportOptions opt = new StructExportOptions();
-                    for (int j = 1; j < pages.Count + 1; j++)
-                    {
-                        name = pages[j].Name.ToLower();
-
-                        name = name.Replace(' ', '_');
-                        listnamespg.Add(name);
-                    }
-    
-                    opt.AntiAliasingType = cdrAntiAliasingType.cdrNormalAntiAliasing;
-                    opt.Transparent = true;
-                    opt.ImageType = cdrImageType.cdrRGBColorImage;
-                    opt.ResolutionX = 300;
-                    opt.ResolutionY = 300;
-                    opt.MaintainAspect = true;
-                    int activepage;
-                    // + listnamespg[0]+".png"
-                    for (int k = 0; k < listnamespg.Count; k++)
-                    {
-                        activepage = k + 1;
-                        pages[activepage].Activate();
-                        this.corelApp.ActiveDocument.Export(@"C:\JOBS\DNV - Parkgate\graphics\graphic pics\" + listnamespg[k] + ".png", cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, opt);
-                    }
+                    double x = 1.64, y= 9.85;
+                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello  DDSSDDSDFFFFFFDDDDDDDDDDDDDDDDDD", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
                 };
 
             }
