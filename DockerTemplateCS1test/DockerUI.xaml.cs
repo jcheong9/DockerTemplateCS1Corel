@@ -364,8 +364,69 @@ namespace DockerTemplateCS1test
                 };
                 btn_InputOutputs.Click += (s, e) =>
                 {
-                    double x = 1.64, y= 9.85;
-                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello  DDSSDDSDFFFFFFDDDDDDDDDDDDDDDDDD", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
+                    Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
+                    Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@"F:\NextLeaf\test1.xlsx");
+                    Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
+                    Microsoft.Office.Interop.Excel.Worksheet sheetoutput = workbook.Sheets[2];
+                    int numRowsInput = sheet.UsedRange.Rows.Count;
+                    int numRowsOutput = sheetoutput.UsedRange.Rows.Count;
+                    int numColumns = 2;     // according to your sample
+
+                    List<string> records = new List<string>();
+
+
+                    Excel.Range cell;
+                    int countInput = 0;
+        
+
+                    for (int rowIndex = 2; rowIndex <= numRowsInput; rowIndex++)
+                    {
+                        cell = (Excel.Range)sheet.Cells[rowIndex, 2];
+                        if (Convert.ToString(cell.Value) != null)
+                        {
+                            records.Add(Convert.ToString(cell.Value));
+
+                        }
+
+                    }
+                    //for (int rowIndexOutput = 2; rowIndexOutput <= numRowsOutput; rowIndexOutput++)
+                    //{
+                    //    cell = (Excel.Range)sheetoutput.Cells[rowIndexOutput, 2];
+                    //    if (Convert.ToString(cell.Value) != null)
+                    //    {
+                    //        records.Add(Convert.ToString(cell.Value));
+                    //    }
+
+                    //}
+
+
+                    xl.Quit();
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
+
+                    int recCount = records.Count();
+                    int se;
+                    se = (int)(Math.Ceiling(recCount / 16.0) ); 
+                    //16 rows, 3 columns
+                    double x = 1.64, y= 9.83;
+                    for(int j = 0; j < se; j++)
+                    {
+                        for (int i = 0; i < 16; i++)
+                        {
+                            if (countInput < recCount-1)
+                            {
+                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, records[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
+                                y -= 0.1;
+                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, records[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
+                                y -= 0.498;
+
+                            }
+                            countInput++;
+
+                        }
+                        x += 2.07;
+                        y = 9.83;
+                    }
+
                 };
 
             }
