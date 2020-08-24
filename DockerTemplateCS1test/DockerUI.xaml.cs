@@ -367,9 +367,9 @@ namespace DockerTemplateCS1test
                     Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
                     Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@"F:\NextLeaf\test1.xlsx");
                     Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
-                    Microsoft.Office.Interop.Excel.Worksheet sheetoutput = workbook.Sheets[2];
+
                     int numRowsInput = sheet.UsedRange.Rows.Count;
-                    int numRowsOutput = sheetoutput.UsedRange.Rows.Count;
+
                     int numColumns = 2;     // according to your sample
 
                     List<string> records = new List<string>();
@@ -389,16 +389,6 @@ namespace DockerTemplateCS1test
                         }
 
                     }
-                    //for (int rowIndexOutput = 2; rowIndexOutput <= numRowsOutput; rowIndexOutput++)
-                    //{
-                    //    cell = (Excel.Range)sheetoutput.Cells[rowIndexOutput, 2];
-                    //    if (Convert.ToString(cell.Value) != null)
-                    //    {
-                    //        records.Add(Convert.ToString(cell.Value));
-                    //    }
-
-                    //}
-
 
                     xl.Quit();
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
