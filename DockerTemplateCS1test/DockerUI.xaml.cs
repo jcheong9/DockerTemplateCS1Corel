@@ -294,9 +294,9 @@ namespace DockerTemplateCS1test
                     //{
                     //    string sSelectedPath = fbd.SelectedPath;
                     //}
-                    Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
                     for (int i = 0; i < filePaths.Length; i++)
                     {
+                        Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
                         Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
                         Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
                         int numRowsInput = sheet.UsedRange.Rows.Count;
@@ -332,8 +332,8 @@ namespace DockerTemplateCS1test
                         }
 
                         xl.Quit();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
                     }
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
 
                     int countInput = 0;
                     int recCount = records.Count();
