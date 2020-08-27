@@ -17,6 +17,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using Corel.Interop.VGCore;
 
+
 namespace DockerTemplateCS1test
 {
     public partial class DockerUI : UserControl
@@ -135,120 +136,125 @@ namespace DockerTemplateCS1test
 
                 //popluate machpro zone
                 btn_MachProZone.Click += (s, e) => {
-                    int countLabel = 0;
+                    System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
 
-                    //23 xls / 10 = 2.3 round up = 3 - 1 = 2  .Where(x => x.StartsWith("Panel"))
-                    string[] filePaths = Directory.GetFiles(@"E:\pointlist\machprozone").Where(name => !name.Contains("~$")).ToArray();  
-                    Pages pages = this.corelApp.ActiveDocument.Pages;
-                    Layers allLayers = pages[3].Layers;
-                    //copy and paste to other pages
-                    allLayers.Bottom.Shapes.All().Copy();
-                    int numpg = (int)(Math.Ceiling(filePaths.Length / 10.0) - 1);
-                    this.corelApp.ActiveDocument.InsertPages(numpg, false, 3);
-                    for (int j = 1; j < numpg + 1; j++)
+                    // Set validate names and check file exists to false otherwise windows will
+                    // not let you select "Folder Selection."
+                    folderBrowser.ValidateNames = false;
+                    folderBrowser.CheckFileExists = false;
+                    folderBrowser.CheckPathExists = true;
+                    // Always default to Folder Selection.
+                    folderBrowser.FileName = "Folder Selection.";
+                    if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        pages[3 + j].ActiveLayer.Paste();
-
-                    }
-                    pages[3].Activate();
-                    Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-
-                    double xI = 2.17, xO,xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS;
-                    int numMach = 0, activePg = 3;
-                    for (int i = 0; i < filePaths.Length; i++)
-                    {
-                        if (numMach == 10)
+                        string folderPath = System.IO.Path.GetDirectoryName(folderBrowser.FileName);
+                        int countLabel = 0;
+                        string[] filePaths = Directory.GetFiles(folderPath).Where(name => !name.Contains("~$")).ToArray();
+                        Pages pages = this.corelApp.ActiveDocument.Pages;
+                        Layers allLayers = pages[3].Layers;
+                        //copy and paste to other pages
+                        allLayers.Bottom.Shapes.All().Copy();
+                        int numpg = (int)(Math.Ceiling(filePaths.Length / 10.0) - 1);
+                        this.corelApp.ActiveDocument.InsertPages(numpg, false, 3);
+                        for (int j = 1; j < numpg + 1; j++)
                         {
-                            pages[++activePg].Activate();
-                            numMach = 0;
-                            yp = 9; yI = 8.335; yO = 8.415; ySS = 8.46;
-                            countLabel = 0;
+                            pages[3 + j].ActiveLayer.Paste();
+
                         }
+                        pages[3].Activate();
+                        Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
 
-                        numMach++;
-                        Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
-                        Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
-                        int numRowsInput = sheet.UsedRange.Rows.Count;
-
-
-                        Excel.Range cellPanelNumber;
-                        cellPanelNumber = (Excel.Range)sheet.Cells[1, 2];
-
-                        Excel.Range cellInOut;
-                        Excel.Range cellLabel;
-                        String strInOut;
-
-
-                        if (countLabel >= 5)
+                        double xI = 2.17, xO, xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS;
+                        int numMach = 0, activePg = 3;
+                        for (int i = 0; i < filePaths.Length; i++)
                         {
-                            xI = 6.265;
-                            xp = 6.12;
-                            xO = 4.76;
-                            xSS = 6.265 + 0.1624 * 7;
-                        }
-                        else{
-                            xI = 2.48;
-                            xp = 2.34;
-                            xO = 0.98;
-                            xSS = 2.48 + 0.1624 * 7;
-                        }
-
-                        if (countLabel == 5)
-                        {
-                            yI = 8.335;
-                            yp = 9;
-                            yO = 8.415;
-                            ySS = 8.335;
-                        }
-
-                        //put panel number to coreldraw
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xp, yp, cellPanelNumber.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xp, yp);
-                        for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
-                        {
-                            cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
-                            cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
-                            strInOut = cellInOut.Value;
-
-                            if (strInOut != null && cellLabel.Value != null)
+                            if (numMach == 10)
                             {
-                                if (strInOut.ToLower().Contains('i'))
-                                {
+                                pages[++activePg].Activate();
+                                numMach = 0;
+                                yp = 9; yI = 8.335; yO = 8.415; ySS = 8.46;
+                                countLabel = 0;
+                            }
 
-                                
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
-                                    xI += 0.1624;
-                                }
-                                //helloo
-      
-                                else
+                            numMach++;
+                            Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
+                            Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
+                            int numRowsInput = sheet.UsedRange.Rows.Count;
+
+
+                            Excel.Range cellPanelNumber;
+                            cellPanelNumber = (Excel.Range)sheet.Cells[1, 2];
+
+                            Excel.Range cellInOut;
+                            Excel.Range cellLabel;
+                            String strInOut;
+
+
+                            if (countLabel >= 5)
+                            {
+                                xI = 6.265;
+                                xp = 6.12;
+                                xO = 4.76;
+                                xSS = 6.265 + 0.1624 * 7;
+                            }
+                            else
+                            {
+                                xI = 2.48;
+                                xp = 2.34;
+                                xO = 0.98;
+                                xSS = 2.48 + 0.1624 * 7;
+                            }
+
+                            if (countLabel == 5)
+                            {
+                                yI = 8.335;
+                                yp = 9;
+                                yO = 8.415;
+                                ySS = 8.335;
+                            }
+
+                            //put panel number to coreldraw
+                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xp, yp, cellPanelNumber.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xp, yp);
+                            for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
+                            {
+                                cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
+                                cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
+                                strInOut = cellInOut.Value;
+
+                                if (strInOut != null && cellLabel.Value != null)
                                 {
-                                    if (strInOut.ToLower().Contains('s'))
+                                    if (strInOut.ToLower().Contains('i'))
                                     {
-
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, yI);
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
+                                        xI += 0.1624;
                                     }
                                     else
                                     {
+                                        if (strInOut.ToLower().Contains('s'))
+                                        {
+                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, yI);
+                                        }
+                                        else
+                                        {
+                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
+                                            xO += 0.1624;
 
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
-                                        xO += 0.1624;
-
+                                        }
                                     }
+
+
                                 }
-                                
-                                
                             }
+                            yI -= 1.65;
+                            yp -= 1.65;
+                            yO -= 1.65;
+                            countLabel++;
+
+                            xl.Quit();
                         }
-                        yI -= 1.65;
-                        yp -= 1.65;
-                        yO -= 1.65;
-                        countLabel++;
 
-                        xl.Quit();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
                     }
-
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
-
                 };
 
                 btn_ExportAllPgPNG.Click += (s, e) =>
@@ -285,103 +291,104 @@ namespace DockerTemplateCS1test
 
                 btn_InputOutputs.Click += (s, e) =>
                 {
-                    string[] filePaths = Directory.GetFiles(@"E:\pointlist\machprosys").Where(name => !name.Contains("~$")).ToArray();
                     Dictionary<string, string> records = new Dictionary<string, string>();
-                    //System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-                    //fbd.Description = "Custom Description";
+                    System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
 
-                    //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    //{
-                    //    string sSelectedPath = fbd.SelectedPath;
-                    //}
-                    for (int i = 0; i < filePaths.Length; i++)
+                    // Set validate names and check file exists to false otherwise windows will
+                    // not let you select "Folder Selection."
+                    folderBrowser.ValidateNames = false;
+                    folderBrowser.CheckFileExists = false;
+                    folderBrowser.CheckPathExists = true;
+                    // Always default to Folder Selection.
+                    folderBrowser.FileName = "Folder Selection.";
+                    if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-                        Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
-                        Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
-                        int numRowsInput = sheet.UsedRange.Rows.Count;
+                        string folderPath = System.IO.Path.GetDirectoryName(folderBrowser.FileName);
+                        string[] filePaths = Directory.GetFiles(folderPath).Where(name => !name.Contains("~$")).ToArray();
 
-
-                        //Excel.Range cellPanelNumber;
-                        //cellPanelNumber = (Excel.Range)sheet.Cells[1, 2];
-
-                        Excel.Range cellInOut;
-                        Excel.Range cellLabel;
-                        String strInOut;
-                        int numColumns = 2;     // according to your sample
-
-                        Excel.Range cell;
-
-
-                        //put panel number to coreldraw
-                        string strLabel;
-                        for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
+                        for (int i = 0; i < filePaths.Length; i++)
                         {
-                            cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
-                            cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
-                            strInOut = cellInOut.Value;
+                            Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
+                            Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
+                            Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
+                            int numRowsInput = sheet.UsedRange.Rows.Count;
 
-                            if (Convert.ToString(cellLabel.Value) != null)
+                            Excel.Range cellInOut;
+                            Excel.Range cellLabel;
+                            String strInOut;
+
+                            //put panel number to coreldraw
+                            string strLabel;
+                            for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
                             {
-                                //add a space between the number and letter
-                                strLabel = "[P" + Convert.ToString(cellInOut.Value) + "]";
-                                records.Add(strLabel, Convert.ToString(cellLabel.Value));
+                                cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
+                                cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
+                                strInOut = cellInOut.Value;
+
+                                if (Convert.ToString(cellLabel.Value) != null)
+                                {
+                                    //add a space between the number and letter
+                                    strLabel = "[P" + Convert.ToString(cellInOut.Value) + "]";
+                                    records.Add(strLabel, Convert.ToString(cellLabel.Value));
+
+                                }
 
                             }
 
+                            xl.Quit();
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
                         }
 
-                        xl.Quit();
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
-                    }
-
-                    int countInput = 0;
-                    int recCount = records.Count();
-                    int activePg = 2;
-                    Pages pages = this.corelApp.ActiveDocument.Pages;
+                        int countInput = 0;
+                        int recCount = records.Count();
+                        int activePg = 2;
+                        Pages pages = this.corelApp.ActiveDocument.Pages;
                     
-                    Layers allLayers = pages[activePg].Layers;
-                    //copy and paste to other pages
-                    allLayers.Bottom.Shapes.All().Copy();
-                    //number of columns
-                    int numCol = (int)(Math.Ceiling(recCount / 16.0));
-                    int numPg = (int)(Math.Ceiling(numCol / 3.0) - 1);
-                    this.corelApp.ActiveDocument.InsertPages(numPg, false, activePg);
-                    for (int j = 1; j < numPg + 1; j++)
-                    {
-                        pages[activePg + j].ActiveLayer.Paste();
-
-                    }
-
-                    pages[activePg].Activate();
-                    //16 rows, 3 columns
-                    double x = 1.64, y= 9.83;
-                    for(int j = 0; j < numCol; j++)
-                    {
-                        if(j % 3 == 0)
+                        Layers allLayers = pages[activePg].Layers;
+                        //copy and paste to other pages
+                        allLayers.Bottom.Shapes.All().Copy();
+                        //number of columns
+                        int numCol = (int)(Math.Ceiling(recCount / 16.0));
+                        int numPg = (int)(Math.Ceiling(numCol / 3.0) - 1);
+                        this.corelApp.ActiveDocument.InsertPages(numPg, false, activePg);
+                        for (int j = 1; j < numPg + 1; j++)
                         {
-                            pages[activePg++].Activate();
-                            x = 1.64; y = 9.83;
+                            pages[activePg + j].ActiveLayer.Paste();
+
                         }
-                        for (int i = 0; i < 16; i++)
+
+                        pages[activePg].Activate();
+                        //16 rows, 3 columns
+                        double x = 1.64, y= 9.83;
+                        for(int j = 0; j < numCol; j++)
                         {
-                            if (countInput < recCount)
+                            if(j % 3 == 0)
                             {
-                                var item = records.ElementAt(countInput);
-                                string itemKey = item.Key;
-                                string itemValue = item.Value;
-                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemValue, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
-                                y -= 0.1;
-                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemKey, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
-                                y -= 0.498;
+                                pages[activePg++].Activate();
+                                x = 1.64; y = 9.83;
+                            }
+                            for (int i = 0; i < 16; i++)
+                            {
+                                if (countInput < recCount)
+                                {
+                                    var item = records.ElementAt(countInput);
+                                    string itemKey = item.Key;
+                                    string itemValue = item.Value;
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemValue, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
+                                    y -= 0.1;
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemKey, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
+                                    y -= 0.498;
+
+                                }
+                                countInput++;
 
                             }
-                            countInput++;
-
+                            x += 2.07;
+                            y = 9.83;
                         }
-                        x += 2.07;
-                        y = 9.83;
+
                     }
+
 
                 };
 
