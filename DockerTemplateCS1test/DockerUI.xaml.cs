@@ -153,7 +153,7 @@ namespace DockerTemplateCS1test
                     pages[3].Activate();
                     Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
 
-                    double xI = 2.17, xO,xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS = 8.46;
+                    double xI = 2.17, xO,xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS;
                     int numMach = 0, activePg = 3;
                     for (int i = 0; i < filePaths.Length; i++)
                     {
@@ -285,49 +285,94 @@ namespace DockerTemplateCS1test
 
                 btn_InputOutputs.Click += (s, e) =>
                 {
+                    string[] filePaths = Directory.GetFiles(@"E:\pointlist\machprosys").Where(name => !name.Contains("~$")).ToArray();
+                    Dictionary<string, string> records = new Dictionary<string, string>();
+                    //System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                    //fbd.Description = "Custom Description";
+
+                    //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    //{
+                    //    string sSelectedPath = fbd.SelectedPath;
+                    //}
                     Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-                    Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@"E:\NextLeaf\test1.xlsx");
-                    Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
-
-                    int numRowsInput = sheet.UsedRange.Rows.Count;
-
-                    int numColumns = 2;     // according to your sample
-
-                    List<string> records = new List<string>();
-
-
-                    Excel.Range cell;
-                    int countInput = 0;
-        
-
-                    for (int rowIndex = 2; rowIndex <= numRowsInput; rowIndex++)
+                    for (int i = 0; i < filePaths.Length; i++)
                     {
-                        cell = (Excel.Range)sheet.Cells[rowIndex, 2];
-                        if (Convert.ToString(cell.Value) != null)
+                        Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
+                        Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
+                        int numRowsInput = sheet.UsedRange.Rows.Count;
+
+
+                        //Excel.Range cellPanelNumber;
+                        //cellPanelNumber = (Excel.Range)sheet.Cells[1, 2];
+
+                        Excel.Range cellInOut;
+                        Excel.Range cellLabel;
+                        String strInOut;
+                        int numColumns = 2;     // according to your sample
+
+                        Excel.Range cell;
+
+
+                        //put panel number to coreldraw
+                        string strLabel;
+                        for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
                         {
-                            records.Add(Convert.ToString(cell.Value));
+                            cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
+                            cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
+                            strInOut = cellInOut.Value;
+
+                            if (Convert.ToString(cellLabel.Value) != null)
+                            {
+                                //add a space between the number and letter
+                                strLabel = "[P" + Convert.ToString(cellInOut.Value) + "]";
+                                records.Add(strLabel, Convert.ToString(cellLabel.Value));
+
+                            }
 
                         }
 
+                        xl.Quit();
                     }
-
-                    xl.Quit();
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
 
+                    int countInput = 0;
                     int recCount = records.Count();
-                    int se;
-                    se = (int)(Math.Ceiling(recCount / 16.0) ); 
+                    int activePg = 2;
+                    Pages pages = this.corelApp.ActiveDocument.Pages;
+                    
+                    Layers allLayers = pages[activePg].Layers;
+                    //copy and paste to other pages
+                    allLayers.Bottom.Shapes.All().Copy();
+                    //number of columns
+                    int numCol = (int)(Math.Ceiling(recCount / 16.0));
+                    int numPg = (int)(Math.Ceiling(numCol / 3.0) - 1);
+                    this.corelApp.ActiveDocument.InsertPages(numPg, false, activePg);
+                    for (int j = 1; j < numPg + 1; j++)
+                    {
+                        pages[activePg + j].ActiveLayer.Paste();
+
+                    }
+
+                    pages[activePg].Activate();
                     //16 rows, 3 columns
                     double x = 1.64, y= 9.83;
-                    for(int j = 0; j < se; j++)
+                    for(int j = 0; j < numCol; j++)
                     {
+                        if(j % 3 == 0)
+                        {
+                            pages[activePg++].Activate();
+                            x = 1.64; y = 9.83;
+                        }
                         for (int i = 0; i < 16; i++)
                         {
                             if (countInput < recCount)
                             {
-                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, records[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
+                                var item = records.ElementAt(countInput);
+                                string itemKey = item.Key;
+                                string itemValue = item.Value;
+                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemValue, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
                                 y -= 0.1;
-                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, records[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
+                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemKey, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
                                 y -= 0.498;
 
                             }
