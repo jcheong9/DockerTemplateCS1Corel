@@ -132,8 +132,6 @@ namespace DockerTemplateCS1test
 
                 };
 
-
-
                 //popluate machpro zone
                 btn_MachProZone.Click += (s, e) => {
                     System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
@@ -163,7 +161,7 @@ namespace DockerTemplateCS1test
                         }
                         pages[3].Activate();
                         Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-
+                        
                         double xI = 2.17, xO, xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS;
                         int numMach = 0, activePg = 3;
                         for (int i = 0; i < filePaths.Length; i++)
@@ -212,7 +210,7 @@ namespace DockerTemplateCS1test
                                 yO = 8.415;
                                 ySS = 8.335;
                             }
-
+                            bool empty = false;
                             //put panel number to coreldraw
                             this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xp, yp, cellPanelNumber.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xp, yp);
                             for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
@@ -225,8 +223,13 @@ namespace DockerTemplateCS1test
                                 {
                                     if (strInOut.ToLower().Contains('i'))
                                     {
+                                        if (empty)
+                                        {
+                                            xI += 0.1624;
+                                        }
                                         this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
                                         xI += 0.1624;
+                                        empty = false;
                                     }
                                     else
                                     {
@@ -236,13 +239,19 @@ namespace DockerTemplateCS1test
                                         }
                                         else
                                         {
+                                            if (empty)
+                                            {
+                                                xO += 0.1624;
+                                            }
                                             this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
                                             xO += 0.1624;
-
+                                            empty = false;
                                         }
                                     }
-
-
+                                }
+                                else
+                                {
+                                    empty = true;
                                 }
                             }
                             yI -= 1.65;
