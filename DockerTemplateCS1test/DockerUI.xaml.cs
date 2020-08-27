@@ -138,7 +138,7 @@ namespace DockerTemplateCS1test
                     int countLabel = 0;
 
                     //23 xls / 10 = 2.3 round up = 3 - 1 = 2  .Where(x => x.StartsWith("Panel"))
-                    string[] filePaths = Directory.GetFiles(@"E:\pointlist\machprozone"); 
+                    string[] filePaths = Directory.GetFiles(@"E:\pointlist\machprozone").Where(name => !name.Contains("~$")).ToArray();  
                     Pages pages = this.corelApp.ActiveDocument.Pages;
                     Layers allLayers = pages[3].Layers;
                     //copy and paste to other pages
@@ -152,10 +152,20 @@ namespace DockerTemplateCS1test
                     }
                     pages[3].Activate();
                     Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-                    //for (int i = 0; i < filePaths.Length; i++)
+
                     double xI = 2.17, xO,xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS = 8.46;
-                    for (int i = 0; i < 10; i++)
+                    int numMach = 0, activePg = 3;
+                    for (int i = 0; i < filePaths.Length; i++)
                     {
+                        if (numMach == 10)
+                        {
+                            pages[++activePg].Activate();
+                            numMach = 0;
+                            yp = 9; yI = 8.335; yO = 8.415; ySS = 8.46;
+                            countLabel = 0;
+                        }
+
+                        numMach++;
                         Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[i]);
                         Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
                         int numRowsInput = sheet.UsedRange.Rows.Count;
@@ -167,6 +177,7 @@ namespace DockerTemplateCS1test
                         Excel.Range cellInOut;
                         Excel.Range cellLabel;
                         String strInOut;
+
 
                         if (countLabel >= 5)
                         {
@@ -233,104 +244,13 @@ namespace DockerTemplateCS1test
                         yO -= 1.65;
                         countLabel++;
 
-
-
-
+                        xl.Quit();
                     }
 
-                    xl.Quit();
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
 
-                    ////--------------output------------------
-                    //y = 8.46;
-                    //x = 0.98;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "herree", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hellottttttttttt", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    ////bottom label output
-                    //y = 8.46;
-                    //x = 0.98;
-                    //y -= 1.65;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "helloOUTCOl", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    ////right label output
-                    //x = 4.78;
-                    //y = 8.46;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "helloOUTCOl", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-
-                    //--------------panel
-                    //y = 9;
-                    //x = 2.34;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "50102", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    //y -= 1.65;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "50102", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    //y = 9;
-                    //x += 3.78;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "50102", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    //y -= 1.65;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "501024", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    //y -= 1.65;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "501024", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    //y -= 1.65;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "501024", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    ////--------------input
-                    //y = 8.46;
-                    //x = 2.48;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "herree", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hellottttttttttt", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-                    //x += 0.1624;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "hello", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    ////bottom label input
-                    //y = 8.46;
-                    //x = 2.48;
-                    //y -= 1.65;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "helloINOl", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    ////right label input
-                    //x = 6.265;
-                    //y = 8.46;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "helloINOl", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
-
-                    ////right down label input
-                    //x = 6.265;
-                    //y = 8.46;
-                    //y -= 1.65;
-                    //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, "helloINOl", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, x, y);
                 };
+
                 btn_ExportAllPgPNG.Click += (s, e) =>
                 {
                     Pages pages = this.corelApp.ActiveDocument.Pages;
@@ -362,10 +282,11 @@ namespace DockerTemplateCS1test
                         this.corelApp.ActiveDocument.Export(@"C:\JOBS\DNV - Parkgate\graphics\graphic pics\" + listnamespg[k] + ".png", cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, opt);
                     }
                 };
+
                 btn_InputOutputs.Click += (s, e) =>
                 {
                     Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-                    Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@"F:\NextLeaf\test1.xlsx");
+                    Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@"E:\NextLeaf\test1.xlsx");
                     Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
 
                     int numRowsInput = sheet.UsedRange.Rows.Count;
@@ -402,7 +323,7 @@ namespace DockerTemplateCS1test
                     {
                         for (int i = 0; i < 16; i++)
                         {
-                            if (countInput < recCount-1)
+                            if (countInput < recCount)
                             {
                                 this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, records[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
                                 y -= 0.1;
