@@ -36,98 +36,125 @@ namespace DockerTemplateCS1test
                 this.corelApp = app as corel.Application;
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);
                 //popluate machpro sys
-                btn_drawSquad.Click += (s, e) => {
-                    Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-                    Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@"E:\NextLeaf\test1.xlsx");
-                    Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
-                    Microsoft.Office.Interop.Excel.Worksheet sheetoutput = workbook.Sheets[2];
-                    int numRowsInput = sheet.UsedRange.Rows.Count;
-                    int numRowsOutput = sheetoutput.UsedRange.Rows.Count;
-                    int numColumns = 2;     // according to your sample
+                btn_MachProSys.Click += (s, e) => {
+                    System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
 
-                    List<string> recordsInput = new List<string>();
-                    List<string> recordsOutput = new List<string>();
-
-                    Excel.Range cell;
-                    int countInput = 0;
-                    int countOutput = 0;
-
-                    for (int rowIndex = 2; rowIndex <= numRowsInput; rowIndex++)
+                    folderBrowser.InitialDirectory = "c:\\";
+                    folderBrowser.Filter = "Database files (*.xlsx)| *.xlsx";
+                    folderBrowser.FilterIndex = 0;
+                    folderBrowser.RestoreDirectory = true;
+                    if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        cell = (Excel.Range)sheet.Cells[rowIndex, 2];
-                        if (Convert.ToString(cell.Value) != null)
-                        {
-                            recordsInput.Add(Convert.ToString(cell.Value));
+                        string folderPath = folderBrowser.FileName;
+                        Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
+                        Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(folderPath);
+                        Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
 
-                        }
-                        else
-                        {
-                            recordsInput.Add("");
+                        int numRowsInput = sheet.UsedRange.Rows.Count;
+   
+                        List<string> recordsInput = new List<string>();
+                        List<string> recordsOutput = new List<string>();
 
-                        }
-                    }
-                    for (int rowIndexOutput = 2; rowIndexOutput <= numRowsOutput; rowIndexOutput++)
-                    {
-                        cell = (Excel.Range)sheetoutput.Cells[rowIndexOutput, 2];
-                        if (Convert.ToString(cell.Value) != null)
+                        Excel.Range cell;
+                        Excel.Range cellInOut;
+                        Excel.Range cellLabel;
+                        string strInOut;
+                        int countInput = 0;
+                        int countOutput = 0;
+                        //popluate into the list
+                        for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
                         {
-                            recordsOutput.Add(Convert.ToString(cell.Value));
-                        }
-                        else
-                        {
-                            recordsOutput.Add("");
-                        }
-                    }
+                            cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
+                            cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
+                            strInOut = cellInOut.Value;
 
-
-                    xl.Quit();
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
-
-                    for (int l = 0; l < 2; l++)
-                    {
-                        x = 0.50;
-                        for (int j = 0; j < 3; j++)
-                        {
-                            if (l == 0)
+                            if (strInOut != null )
                             {
-                                y = 8.88;
-                            }
-                            else
-                            {
-                                y = 4.90;
-                            }
-                            for (int i = 0; i < 12; i++)
-                            {
-                                if (recordsInput[countInput] != "")
+                                if (strInOut.ToLower().Contains('i'))
                                 {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsInput[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+                                    if(cellLabel.Value != null)
+                                    {
+                                        recordsInput.Add(Convert.ToString(cellLabel.Value));
+
+                                    }
+                                    else
+                                    {
+                                        recordsInput.Add("");
+                                    }
+                                }
+                                else
+                                {
+                                    if (cellLabel.Value != null)
+                                    {
+                                        recordsOutput.Add(Convert.ToString(cellLabel.Value));
+
+                                    }
+                                    else
+                                    {
+                                        recordsOutput.Add("");
+                                    }
 
                                 }
-                                countInput++;
-                                y -= 0.305;
                             }
 
-                            x += 1.078;
-                            if (l == 0)
-                            {
-                                y = 8.88;
-                            }
-                            else
-                            {
-                                y = 4.90;
-                            }
-                            for (int k = 0; k < 8; k++)
-                            {
-                                if (recordsOutput[countOutput] != "")
-                                {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsOutput[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
-                                }
-                                countOutput++;
-                                y -= 0.395;
-                            }
-                            x += 1.64;
                         }
 
+                        xl.Quit();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
+
+                        for (int l = 0; l < 2; l++)
+                        {
+                            x = 0.50;
+                            for (int j = 0; j < 3; j++)
+                            {
+                                if (l == 0)
+                                {
+                                    y = 8.88;
+                                }
+                                else
+                                {
+                                    y = 4.90;
+                                }
+                                for (int i = 0; i < 12; i++)
+                                {
+                                    if (countInput < recordsInput.Count())
+                                    {
+                                        if (recordsInput[countInput] != "")
+                                        {
+                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsInput[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+
+                                        }
+                                        countInput++;
+                                        y -= 0.305;
+
+                                    }
+                                }
+
+                                x += 1.078;
+                                if (l == 0)
+                                {
+                                    y = 8.88;
+                                }
+                                else
+                                {
+                                    y = 4.90;
+                                }
+                                for (int k = 0; k < 8; k++)
+                                {
+                                    if (countOutput < recordsOutput.Count())
+                                    {
+                                        if (recordsOutput[countOutput] != "")
+                                        {
+                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsOutput[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+                                        }
+                                        countOutput++;
+                                        y -= 0.395;
+                                    }
+                                }
+                                x += 1.64;
+                            }
+
+                        }
                     }
 
                 };
