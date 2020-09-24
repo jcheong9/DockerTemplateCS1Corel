@@ -295,33 +295,90 @@ namespace DockerTemplateCS1test
 
                 btn_ExportAllPgPNG.Click += (s, e) =>
                 {
-                    Pages pages = this.corelApp.ActiveDocument.Pages;
-                    string name;
-                    List<string> listnamespg = new List<string>();
-                    StructExportOptions opt = new StructExportOptions();
-                    for (int j = 1; j < pages.Count + 1; j++)
-                    {
-                        name = pages[j].Name.ToLower();
+                    System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
 
-                        name = name.Replace(' ' , '_');
-                        listnamespg.Add(name);
+                    // Set validate names and check file exists to false otherwise windows will
+                    // not let you select "Folder Selection."
+                    folderBrowser.ValidateNames = false;
+                    folderBrowser.CheckFileExists = false;
+                    folderBrowser.CheckPathExists = true;
+                    // Always default to Folder Selection.
+                    folderBrowser.FileName = "Folder Selection.";
+                    if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        string folderPath = System.IO.Path.GetDirectoryName(folderBrowser.FileName);
+                        Pages pages = this.corelApp.ActiveDocument.Pages;
+                        string name;
+                        List<string> listnamespg = new List<string>();
+                        StructExportOptions opt = new StructExportOptions();
+                        for (int j = 1; j < pages.Count + 1; j++)
+                        {
+                            name = pages[j].Name.ToLower();
+
+                            name = name.Replace(' ', '_');
+                            listnamespg.Add(name);
+                        }
+
+                        opt.AntiAliasingType = cdrAntiAliasingType.cdrNormalAntiAliasing;
+                        opt.Transparent = true;
+                        opt.ImageType = cdrImageType.cdrRGBColorImage;
+                        opt.ResolutionX = 300;
+                        opt.ResolutionY = 300;
+                        opt.MaintainAspect = true;
+                        opt.SizeX = 1200;
+                        opt.SizeY = 800;
+                        int activepage;
+                        for (int k = 0; k < listnamespg.Count; k++)
+                        {
+                            activepage = k + 1;
+                            pages[activepage].Activate();
+                            this.corelApp.ActiveDocument.Export(folderPath + "\\" + listnamespg[k] + ".png", cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, opt);
+                        }
                     }
+                };
 
-                    opt.AntiAliasingType = cdrAntiAliasingType.cdrNormalAntiAliasing;
-                    opt.Transparent = true;
-                    opt.ImageType = cdrImageType.cdrRGBColorImage;
-                    opt.ResolutionX = 300;
-                    opt.ResolutionY = 300;
-                    opt.MaintainAspect = true;
-                    opt.SizeX = 1200;
-                    opt.SizeY = 800;
-                    int activepage;
-                    // + listnamespg[0]+".png"
-                    for (int k = 0; k < listnamespg.Count; k++)
+
+                btn_ExportAllPgPNG_Proview.Click += (s, e) =>
+                {
+                    System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
+
+                    // Set validate names and check file exists to false otherwise windows will
+                    // not let you select "Folder Selection."
+                    folderBrowser.ValidateNames = false;
+                    folderBrowser.CheckFileExists = false;
+                    folderBrowser.CheckPathExists = true;
+                    // Always default to Folder Selection.
+                    folderBrowser.FileName = "Folder Selection.";
+                    if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        activepage = k + 1;
-                        pages[activepage].Activate();
-                        this.corelApp.ActiveDocument.Export(@"C:\JOBS\DNV - Parkgate\graphics\graphic pics\" + listnamespg[k] + ".png", cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, opt);
+                        string folderPath = System.IO.Path.GetDirectoryName(folderBrowser.FileName);
+                        Pages pages = this.corelApp.ActiveDocument.Pages;
+                        string name;
+                        List<string> listnamespg = new List<string>();
+                        StructExportOptions opt = new StructExportOptions();
+                        for (int j = 1; j < pages.Count + 1; j++)
+                        {
+                            name = pages[j].Name.ToLower();
+
+                            name = name.Replace(' ', '_');
+                            listnamespg.Add(name);
+                        }
+
+                        opt.AntiAliasingType = cdrAntiAliasingType.cdrNormalAntiAliasing;
+                        opt.Transparent = true;
+                        opt.ImageType = cdrImageType.cdrRGBColorImage;
+                        opt.ResolutionX = 300;
+                        opt.ResolutionY = 300;
+                        opt.MaintainAspect = true;
+                        opt.SizeX = 480;
+                        opt.SizeY = 272;
+                        int activepage;
+                        for (int k = 0; k < listnamespg.Count; k++)
+                        {
+                            activepage = k + 1;
+                            pages[activepage].Activate();
+                            this.corelApp.ActiveDocument.Export(folderPath + "\\" + listnamespg[k] + ".png", cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, opt);
+                        }
                     }
                 };
 
