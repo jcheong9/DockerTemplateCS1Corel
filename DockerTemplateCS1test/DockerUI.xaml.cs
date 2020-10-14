@@ -474,11 +474,96 @@ namespace DockerTemplateCS1test
 
                                 }
                                 countInput++;
-
                             }
                             x += 2.07;
                             y = 9.83;
                         }
+                    }
+                };
+                btn_TAGS.Click += (s, e) =>
+                {
+                    var buildingValueList = new List<string>();
+                    var panelValueValueList = new List<string>();
+                    var descValueValueList = new List<string>();
+                    var networkValueList = new List<string>();
+                    var bacnetIdValueList = new List<string>();
+                    var pointValueList = new List<string>();
+                    var tagNameValueList = new List<string>();
+                    var wireValueList = new List<string>();
+                    System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
+
+                    folderBrowser.InitialDirectory = "c:\\";
+                    folderBrowser.Filter = "Database files (*.xlsx)| *.xlsx";
+                    folderBrowser.FilterIndex = 0;
+                    folderBrowser.RestoreDirectory = true;
+                    if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        string folderPath = folderBrowser.FileName;
+                        Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
+                        Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(folderPath);
+                        Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
+                        int numRowsInput = sheet.UsedRange.Rows.Count;
+
+                        Excel.Range cellBuilding;
+                        Excel.Range cellPanel;
+                        Excel.Range cellDesc;
+                        Excel.Range cellNetwork;
+                        Excel.Range cellBacnetID;
+                        Excel.Range cellPoints;
+                        Excel.Range cellTagName;
+                        Excel.Range cellWired;
+
+                        //put panel number to coreldraw
+                        string buildingValue ="none";
+                        string panelValue ="none";
+                        string descValue ="none";
+                        string networkValue ="none";
+                        string bacnetIdValue ="none";
+                        string pointValue ="none";
+                        string tagNameValue ="none";
+                        string wireValue ="none";
+                        for (int rowIndex = 2; rowIndex <= numRowsInput; rowIndex++)
+                        {
+                            cellBuilding = (Excel.Range)sheet.Cells[rowIndex, 1];
+                            cellPanel = (Excel.Range)sheet.Cells[rowIndex, 2];
+                            cellDesc = (Excel.Range)sheet.Cells[rowIndex, 3];
+                            cellNetwork = (Excel.Range)sheet.Cells[rowIndex, 4];
+                            cellBacnetID = (Excel.Range)sheet.Cells[rowIndex, 5];
+                            cellPoints = (Excel.Range)sheet.Cells[rowIndex, 6];
+                            cellTagName = (Excel.Range)sheet.Cells[rowIndex, 7];
+                            cellWired = (Excel.Range)sheet.Cells[rowIndex, 8];
+
+
+
+                            //add a space between the number and letter
+                            buildingValueList.Add(Convert.ToString(cellBuilding.Value));
+                            panelValueValueList.Add(Convert.ToString(cellPanel.Value));
+                            descValueValueList.Add(Convert.ToString(cellDesc.Value));
+                            networkValueList.Add(Convert.ToString(cellNetwork.Value));
+                            bacnetIdValueList.Add(Convert.ToString(cellBacnetID.Value));
+                            pointValueList.Add(Convert.ToString(cellPoints.Value));
+                            tagNameValueList.Add(Convert.ToString(cellTagName.Value));
+                            wireValueList.Add(Convert.ToString(cellWired.Value));
+
+                        }
+
+                        xl.Quit();
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
+
+                        double x = 1.10, y = 9.105;
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, buildingValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                        y = y - 0.095;
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, panelValueValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                        y = y - 0.095;
+                        if (descValueValueList[1] != null)
+                        {
+                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, descValueValueList[1], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                        }
+                        x = 1.2; y = 8.515;
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, networkValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
+                        y = y - 0.155;
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, bacnetIdValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
+
 
                     }
 

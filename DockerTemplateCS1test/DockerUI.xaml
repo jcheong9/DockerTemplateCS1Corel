@@ -23,6 +23,7 @@
             <Button Content="Input Outputs Labels" Margin="2,0,0,0" Name="btn_InputOutputs"/>
             <Button Content="Export All Page PNG" Margin="2,0,0,0" Name="btn_ExportAllPgPNG"/>
             <Button Content="Export All Page PNG for Proview" Margin="2,0,0,0" Name="btn_ExportAllPgPNG_Proview"/>
+            <Button Content="Inputs and Outputs tags" Margin="2,0,0,0" Name="btn_TAGS"/>
         </StackPanel>
     </Grid>
 
