@@ -559,12 +559,19 @@ namespace DockerTemplateCS1test
                         {
                             this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, descValueValueList[1], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
                         }
+                        //put the text at network and bacnet id white boxes
                         x = 1.2; y = 8.515;
                         this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, networkValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
                         y = y - 0.155;
                         this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, bacnetIdValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
 
-
+                        //point, name, and wired white boxes
+                        x = 0.8; y = 7.915;
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, pointValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                        y = y - 0.18;
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, tagNameValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                        y = y - 0.18;
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, wireValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
                     }
 
 
