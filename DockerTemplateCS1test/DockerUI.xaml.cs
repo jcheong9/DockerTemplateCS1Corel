@@ -550,28 +550,86 @@ namespace DockerTemplateCS1test
                         xl.Quit();
                         System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
 
-                        double x = 1.10, y = 9.105;
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, buildingValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                        y = y - 0.095;
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, panelValueValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                        y = y - 0.095;
-                        if (descValueValueList[1] != null)
-                        {
-                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, descValueValueList[1], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                        }
-                        //put the text at network and bacnet id white boxes
-                        x = 1.2; y = 8.515;
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, networkValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
-                        y = y - 0.155;
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, bacnetIdValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
+                        
+                        
+                        int recCount = buildingValueList.Count();
+                        int activePg = 1;
+                        Pages pages = this.corelApp.ActiveDocument.Pages;
 
-                        //point, name, and wired white boxes
-                        x = 0.8; y = 7.915;
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, pointValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                        y = y - 0.18;
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, tagNameValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                        y = y - 0.18;
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, wireValueList[0], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                        Layers allLayers = pages[activePg].Layers;
+                        //copy and paste to other pages
+                        allLayers.Bottom.Shapes.All().Copy();
+                        //number of columns
+                        int numPg = (int)(Math.Ceiling(recCount / 12.0)-1);
+                        
+                        this.corelApp.ActiveDocument.InsertPages(numPg, false, activePg);
+                        for (int j = 1; j < numPg + 1; j++)
+                        {
+                            pages[activePg + j].ActiveLayer.Paste();
+
+                        }
+                        int recordIndex = 0;
+                        for (int p = 0; p < numPg+1; p++)
+                        {
+                            double y = 9.105;
+                            pages[activePg++].Activate();
+                            for (int k = 0; k < 3; k++)
+                            {
+                                double x = 1.10, xMid = 1.2, xBottom = 0.8;
+
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    switch (k)
+                                    {
+                                        case 0:
+                                            y = 9.105;
+                                            break;
+                                        case 1:
+                                            y = 5.655;
+                                            break;
+                                        case 2:
+                                            y = 2.205;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    if (recordIndex < buildingValueList.Count())
+                                    {
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, buildingValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                                        y = y - 0.095;
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, panelValueValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                                        y = y - 0.095;
+                                        if (descValueValueList[recordIndex] != null)
+                                        {
+                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, descValueValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                                        }
+                                        //put the text at network and bacnet id white boxes
+                                        y = y - 0.4;
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xMid, y, networkValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
+                                        y = y - 0.155;
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xMid, y, bacnetIdValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
+
+                                        //point, name, and wired white boxes
+                                        y = y - 0.445;
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xBottom, y, pointValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                                        y = y - 0.18;
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xBottom, y, tagNameValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                                        y = y - 0.18;
+                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xBottom, y, wireValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
+                                        
+                                        recordIndex++;
+                                        x = x + 2.02;
+                                        xMid = xMid + 2.02;
+                                        xBottom = xBottom + 2.02;
+
+                                    }
+
+                                }
+                            }
+                            
+                        }
+
+
                     }
 
 
