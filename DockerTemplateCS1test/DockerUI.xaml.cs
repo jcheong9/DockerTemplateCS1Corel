@@ -35,19 +35,24 @@ namespace DockerTemplateCS1test
             {
                 this.corelApp = app as corel.Application;
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);
-                //popluate machpro sys
+
+                //popluate machpro sys labels
                 btn_MachProSys.Click += (s, e) => {
                     System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
 
-                    folderBrowser.InitialDirectory = "c:\\";
-                    folderBrowser.Filter = "Database files (*.xlsx)| *.xlsx";
-                    folderBrowser.FilterIndex = 0;
-                    folderBrowser.RestoreDirectory = true;
+                    // Set validate names and check file exists to false otherwise windows will
+                    // not let you select "Folder Selection."
+                    folderBrowser.ValidateNames = false;
+                    folderBrowser.CheckFileExists = false;
+                    folderBrowser.CheckPathExists = true;
+                    // Always default to Folder Selection.
+                    folderBrowser.FileName = "Folder Selection.";
                     if (folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        string folderPath = folderBrowser.FileName;
+                        string folderPath = System.IO.Path.GetDirectoryName(folderBrowser.FileName);
+                        string[] filePaths = Directory.GetFiles(folderPath).Where(name => !name.Contains("~$")).ToArray();
                         Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
-                        Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(folderPath);
+                        Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[0]);
                         Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
 
                         int numRowsInput = sheet.UsedRange.Rows.Count;
@@ -175,27 +180,28 @@ namespace DockerTemplateCS1test
                         string folderPath = System.IO.Path.GetDirectoryName(folderBrowser.FileName);
                         int countLabel = 0;
                         string[] filePaths = Directory.GetFiles(folderPath).Where(name => !name.Contains("~$")).ToArray();
+                        int activePage = 1;
                         Pages pages = this.corelApp.ActiveDocument.Pages;
-                        Layers allLayers = pages[3].Layers;
+                        Layers allLayers = pages[activePage].Layers;
                         //copy and paste to other pages
                         allLayers.Bottom.Shapes.All().Copy();
                         int numpg = (int)(Math.Ceiling(filePaths.Length / 10.0) - 1);
-                        this.corelApp.ActiveDocument.InsertPages(numpg, false, 3);
+                        this.corelApp.ActiveDocument.InsertPages(numpg, false, activePage);
                         for (int j = 1; j < numpg + 1; j++)
                         {
-                            pages[3 + j].ActiveLayer.Paste();
+                            pages[activePage + j].ActiveLayer.Paste();
 
                         }
-                        pages[3].Activate();
+                        pages[activePage].Activate();
                         Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
                         
                         double xI = 2.17, xO, xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS;
-                        int numMach = 0, activePg = 3;
+                        int numMach = 0;
                         for (int i = 0; i < filePaths.Length; i++)
                         {
                             if (numMach == 10)
                             {
-                                pages[++activePg].Activate();
+                                pages[++activePage].Activate();
                                 numMach = 0;
                                 yp = 9; yI = 8.335; yO = 8.415; ySS = 8.46;
                                 countLabel = 0;
@@ -292,7 +298,7 @@ namespace DockerTemplateCS1test
                         System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
                     }
                 };
-
+                //export pages to png files
                 btn_ExportAllPgPNG.Click += (s, e) =>
                 {
                     System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
@@ -337,7 +343,7 @@ namespace DockerTemplateCS1test
                     }
                 };
 
-
+                //export pages to 480x272 png files
                 btn_ExportAllPgPNG_Proview.Click += (s, e) =>
                 {
                     System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
@@ -381,7 +387,7 @@ namespace DockerTemplateCS1test
                         }
                     }
                 };
-
+                // inputs/ outputs points label 
                 btn_InputOutputs.Click += (s, e) =>
                 {
                     Dictionary<string, string> records = new Dictionary<string, string>();
@@ -434,7 +440,7 @@ namespace DockerTemplateCS1test
 
                         int countInput = 0;
                         int recCount = records.Count();
-                        int activePg = 2;
+                        int activePg = 1;
                         Pages pages = this.corelApp.ActiveDocument.Pages;
                     
                         Layers allLayers = pages[activePg].Layers;
