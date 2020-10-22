@@ -28,6 +28,13 @@ namespace DockerTemplateCS1test
         private corel.Shape kk;
         private double x;
         private double y;
+
+        public class Item
+        {
+            public string PanelName { get; set; }
+            public List<string> recordsInputList { get; set; }
+            public List<string> recordsOutputList { get; set; }
+        }
         public DockerUI(object app)
         {
             InitializeComponent();
@@ -58,29 +65,34 @@ namespace DockerTemplateCS1test
                         //copy and paste to other pages
                         allLayers.Bottom.Shapes.All().Copy();
                         int numpg = filePaths.Length ;
-                        this.corelApp.ActiveDocument.InsertPages(numpg - 1, false, activePage);
-                        for (int j = 1; j < numpg ; j++) { 
-                            pages[activePage + j].ActiveLayer.Paste();
+                        //this.corelApp.ActiveDocument.InsertPages(numpg - 1, false, activePage);
+                        //for (int j = 1; j < numpg ; j++) { 
+                        //    pages[activePage + j].ActiveLayer.Paste();
 
-                        }
+                        //}
+                        List<Item> itemsList = new List<Item>();
+                        List<string> recordsInput;
+                        List<string> recordsOutput;
+                        int countInput = 0;
+                        int countOutput = 0;
+                        string panelNameValue;
                         for (int w = 0; w < filePaths.Length; w++)
                         {
-                            pages[activePage++].Activate();
+
                             Microsoft.Office.Interop.Excel.Workbook workbook = xl.Workbooks.Open(@filePaths[w]);
                             Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
 
                             int numRowsInput = sheet.UsedRange.Rows.Count;
 
-                            List<string> recordsInput = new List<string>();
-                            List<string> recordsOutput = new List<string>();
 
                             Excel.Range cellInOut;
                             Excel.Range cellLabel;
-                            Excel.Range PanelName = (Excel.Range)sheet.Cells[1, 2]; ;
+                            Excel.Range PanelName = (Excel.Range)sheet.Cells[1, 2];
+                            panelNameValue = "P" + PanelName.Value;
                             string strInOut;
-                            string panelNameValue ="P" + PanelName.Value;
-                            int countInput = 0;
-                            int countOutput = 0;
+                            recordsInput = new List<string>();
+                            recordsOutput = new List<string>();
+                            
                             //popluate into the list
                             for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
                             {
@@ -118,13 +130,15 @@ namespace DockerTemplateCS1test
                                 }
 
                             }
+                            itemsList.Add(new Item { PanelName = panelNameValue, recordsInputList = recordsInput, recordsOutputList = recordsOutput });
 
                             xl.Quit();
+                        }
 
                             //add the panel text at the top of the label
 
-                            double numInputRecords = recordsInput.Count();
-                            double numOutputRecords = recordsOutput.Count();
+                            double numInputRecords = itemsList[0].recordsInputList.Count();
+                            double numOutputRecords = itemsList[0].recordsOutputList.Count();
                             int numPanelNames = 0;
                             if (numInputRecords > numOutputRecords)
                             {
@@ -147,12 +161,12 @@ namespace DockerTemplateCS1test
                                 }
                                 if (h == 0)
                                 {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, panelNameValue + " MACH-Pro-Sys 1", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[0].PanelName + " MACH-Pro-Sys 1", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
 
                                 }
                                 else
                                 {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, panelNameValue + " MACH-Pro-Point " + h, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[0].PanelName + " MACH-Pro-Point " + h, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
                                 }
                                 x += 2.678;
                                 if (h == 2)
@@ -163,61 +177,68 @@ namespace DockerTemplateCS1test
                             }
 
                             //popluate inputs and output into the columns
-                            for (int l = 0; l < 2; l++)
-                            {
-                                x = 0.50;
-                                for (int j = 0; j < 3; j++)
-                                {
-                                    if (l == 0)
-                                    {
-                                        y = 8.88;
-                                    }
-                                    else
-                                    {
-                                        y = 4.90;
-                                    }
-                                    for (int i = 0; i < 12; i++)
-                                    {
-                                        if (countInput < recordsInput.Count())
-                                        {
-                                            if (recordsInput[countInput] != "")
-                                            {
-                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsInput[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+                            //for (int l = 0; l < 2; l++)
+                            //{
+                            //    x = 0.50;
+                            //    for (int j = 0; j < 3; j++)
+                            //    {
+                            //        if (l == 0)
+                            //        {
+                            //            y = 8.88;
+                            //        }
+                            //        else
+                            //        {
+                            //            y = 4.90;
+                            //        }
+                            //        for (int i = 0; i < 12; i++)
+                            //        {
+                            //            if (countInput < recordsInput.Count())
+                            //            {
+                            //                if (recordsInput[countInput] != "")
+                            //                {
+                            //                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsInput[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
 
-                                            }
-                                            countInput++;
-                                            y -= 0.305;
+                            //                }
+                            //                countInput++;
+                            //                y -= 0.305;
 
-                                        }
-                                    }
+                            //            }
+                            //        }
 
-                                    x += 1.078;
-                                    if (l == 0)
-                                    {
-                                        y = 8.88;
-                                    }
-                                    else
-                                    {
-                                        y = 4.90;
-                                    }
-                                    //into 8 fields in output column
-                                    for (int k = 0; k < 8; k++)
-                                    {
-                                        if (countOutput < recordsOutput.Count())
-                                        {
-                                            if (recordsOutput[countOutput] != "")
-                                            {
-                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsOutput[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
-                                            }
-                                            countOutput++;
-                                            y -= 0.395;
-                                        }
-                                    }
-                                    x += 1.64;
-                                }
+                            //        x += 1.078;
+                            //        if (l == 0)
+                            //        {
+                            //            y = 8.88;
+                            //        }
+                            //        else
+                            //        {
+                            //            y = 4.90;
+                            //        }
+                            //        //into 8 fields in output column
+                            //        for (int k = 0; k < 8; k++)
+                            //        {
+                            //            if (countOutput < recordsOutput.Count())
+                            //            {
+                            //                if (recordsOutput[countOutput] != "")
+                            //                {
+                            //                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsOutput[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+                            //                }
+                            //                countOutput++;
+                            //                y -= 0.395;
+                            //            }
+                            //        }
+                            //        x += 1.64;
+                            //    }
 
-                            }
-                        }
+                            //}
+                            //change page when the inputs/output are full
+                            //if (true)
+                            //{
+
+                            //}
+                            //this.corelApp.ActiveDocument.InsertPages(1, false, activePage);
+                            //pages[activePage++].Activate();
+                        
                             System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
                     }
 
