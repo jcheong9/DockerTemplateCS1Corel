@@ -135,8 +135,9 @@ namespace DockerTemplateCS1test
                             xl.Quit();
                         }
 
-                            //add the panel text at the top of the label
-
+                        //add the panel text at the top of the label
+                        for (int j = 0; j < itemsList.Count(); j++)
+                        {
                             double numInputRecords = itemsList[0].recordsInputList.Count();
                             double numOutputRecords = itemsList[0].recordsOutputList.Count();
                             int numPanelNames = 0;
@@ -238,6 +239,7 @@ namespace DockerTemplateCS1test
                             //}
                             //this.corelApp.ActiveDocument.InsertPages(1, false, activePage);
                             //pages[activePage++].Activate();
+                        }
                         
                             System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
                     }
