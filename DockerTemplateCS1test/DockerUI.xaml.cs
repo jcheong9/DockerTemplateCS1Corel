@@ -86,18 +86,21 @@ namespace DockerTemplateCS1test
                 {
                     double numYCoor = numY;
                     double numXCoor = numX;
+                    int num;
                     for (int xt = 1; xt < 13; xt++)
                     {
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(numXCoor, numYCoor, "IN"+xt, (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 8, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                        num = xt + 12 * (numPanelsPlaced - 1);
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(numXCoor, numYCoor, "IN" + num, (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 8, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
                         numYCoor -= 0.304; 
                     }
 
                     //OUTPUT COLUMN
                     numYCoor = numY;
-                    numXCoor = 2.286;
+                    numXCoor = numX + 2.052;
                     for (int xt = 1; xt < 9; xt++)
                     {
-                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(numXCoor, numYCoor, "OUT"+xt, (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 8, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                        num = xt + 8 * (numPanelsPlaced - 1);
+                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(numXCoor, numYCoor, "OUT" + num, (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 8, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)2);
                         numYCoor -= 0.3944;
                     }
 
@@ -218,7 +221,7 @@ namespace DockerTemplateCS1test
                             }
                             xPanel = 1.055;
                             x = 0.50;
-                            x = 0.525;
+                            xNumbering = 0.525;
                             while (numPanelsPlaced < numPanelNames)
                             {
                                 numPanelsPlaced++;
