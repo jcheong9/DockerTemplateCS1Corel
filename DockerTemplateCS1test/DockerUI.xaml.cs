@@ -35,6 +35,8 @@ namespace DockerTemplateCS1test
             public List<string> recordsInputList { get; set; }
             public List<string> recordsOutputList { get; set; }
         }
+
+
         public DockerUI(object app)
         {
             InitializeComponent();
@@ -42,6 +44,44 @@ namespace DockerTemplateCS1test
             {
                 this.corelApp = app as corel.Application;
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);
+
+
+                void inputsIntoColumns(double x, double y, ref int countInput, ref int countOutput, double numInputRecords, double numOutputRecords, List<Item> itemsList, int j, int cursorToLabel)
+                {
+                    //into 12 fields in input column
+                    for (int i = 0; i < 12; i++)
+                    {
+                        if (countInput < numInputRecords)
+                        {
+                            if (itemsList[j].recordsInputList[countInput] != "")
+                            {
+                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].recordsInputList[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+
+                            }
+                            countInput++;
+                            y -= 0.305;
+
+                        }
+                    }
+
+                }                
+                void outputIntoColumns(double x, double y, ref int countInput, ref int countOutput, double numInputRecords, double numOutputRecords, List<Item> itemsList, int j, int cursorToLabel)
+                {
+                    //into 8 fields in output column
+                    for (int k = 0; k < 8; k++)
+                    {
+                        if (countOutput < numOutputRecords)
+                        {
+                            if (itemsList[j].recordsOutputList[countOutput] != "")
+                            {
+                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].recordsOutputList[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+                            }
+                            countOutput++;
+                            y -= 0.395;
+                        }
+                    }
+
+                }
 
                 //popluate machpro sys labels
                 btn_MachProSys.Click += (s, e) => {
@@ -65,11 +105,7 @@ namespace DockerTemplateCS1test
                         //copy and paste to other pages
                         allLayers.Bottom.Shapes.All().Copy();
                         int numpg = filePaths.Length ;
-                        //this.corelApp.ActiveDocument.InsertPages(numpg - 1, false, activePage);
-                        //for (int j = 1; j < numpg ; j++) { 
-                        //    pages[activePage + j].ActiveLayer.Paste();
 
-                        //}
                         List<Item> itemsList = new List<Item>();
                         List<string> recordsInput;
                         List<string> recordsOutput;
@@ -136,12 +172,20 @@ namespace DockerTemplateCS1test
                         }
                         int cursorToLabel = 0;
                         int numPanelNames = 0;
+                        double xPanel = 0;
+                        double yPanel = 0;
+                        bool hasChangePanel;
+                        int numPanelsPlaced;
+                        double numInputRecords;
+                        double numOutputRecords;
                         //add the panel text at the top of the label
                         for (int j = 0; j < itemsList.Count(); j++)
                         {
-                            int numPanelsPlaced = 0;
-                            double numInputRecords = itemsList[j].recordsInputList.Count();
-                            double numOutputRecords = itemsList[j].recordsOutputList.Count();
+
+                            hasChangePanel = true;
+                            numPanelsPlaced = 0;
+                            numInputRecords = itemsList[j].recordsInputList.Count();
+                            numOutputRecords = itemsList[j].recordsOutputList.Count();
                             if (numInputRecords > numOutputRecords)
                             {
                                 numPanelNames = (int)(Math.Ceiling(numInputRecords / 12) );
@@ -150,91 +194,53 @@ namespace DockerTemplateCS1test
                             {
                                 numPanelNames = (int)(Math.Ceiling(numOutputRecords / 8));
                             }
-                            x = 1.055;
+                            xPanel = 1.055;
+                            x = 0.50;
                             while (numPanelsPlaced < numPanelNames)
                             {
                                 numPanelsPlaced++;
                                 if (cursorToLabel < 3)
                                 {
-                                    y = 9.25;
+                                    yPanel = 9.25;
+                                    
+                                    y = 8.88;
                                 }
                                 else
                                 {
-                                    y = 5.25;
+                                    yPanel = 5.25;
+                                    
+                                    y = 4.90;
                                 }
-                                if (cursorToLabel == 0)
+                                if (hasChangePanel)
                                 {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].PanelName + " MACH-Pro-Sys 1", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xPanel, yPanel, itemsList[j].PanelName + " MACH-Pro-Sys 1", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                                    hasChangePanel = false;
+                                }
+                                else
+                                {
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xPanel, yPanel, itemsList[j].PanelName + " MACH-Pro-Point " + numPanelsPlaced, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                                }
 
-                                }
-                                else
-                                {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].PanelName + " MACH-Pro-Point " + numPanelsPlaced, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
-                                }
-                                x += 2.678;
                                 if (cursorToLabel == 2)
                                 {
-                                    x = 1.055;
+                                    x = 0.50;
+                                }
+                                inputsIntoColumns(x, y, ref countInput, ref countOutput, numInputRecords, numOutputRecords, itemsList, j, cursorToLabel);
+                                x += 1.078;
+                                outputIntoColumns(x, y, ref countInput, ref countOutput, numInputRecords, numOutputRecords, itemsList, j, cursorToLabel);
+                                x += 1.64;
+
+
+                                xPanel += 2.678;
+                                if (cursorToLabel == 2)
+                                {
+                                    xPanel = 1.055;
                                 }
                                 cursorToLabel++;
                             }
 
-                            //popluate inputs and output into the columns
-                            for (int l = 0; l < 2; l++)
-                            {
-
-                                x = 0.50;
-                                for (int v = 0; v < 3; v++)
-                                {
-                                    if (l == 0)
-                                    {
-                                        y = 8.88;
-                                    }
-                                    else
-                                    {
-                                        y = 4.90;
-                                    }
-                                    for (int i = 0; i < 12; i++)
-                                    {
-                                        if (countInput < numInputRecords)
-                                        {
-                                            if (itemsList[j].recordsInputList[countInput] != "")
-                                            {
-                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].recordsInputList[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
-
-                                            }
-                                            countInput++;
-                                            y -= 0.305;
-
-                                        }
-                                    }
-
-                                    x += 1.078;
-                                    if (l == 0)
-                                    {
-                                        y = 8.88;
-                                    }
-                                    else
-                                    {
-                                        y = 4.90;
-                                    }
-                                    //into 8 fields in output column
-                                    for (int k = 0; k < 8; k++)
-                                    {
-                                        if (countOutput < numOutputRecords)
-                                        {
-                                            if (itemsList[j].recordsOutputList[countOutput] != "")
-                                            {
-                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].recordsOutputList[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
-                                            }
-                                            countOutput++;
-                                            y -= 0.395;
-                                        }
-                                    }
-                                    x += 1.64;
-                                }
-
-                            }
+                            //add the inputs and output to the labels
+                            
                             countInput = 0;
                             countOutput = 0;
                             //change page when the inputs / output are full
@@ -251,6 +257,7 @@ namespace DockerTemplateCS1test
                     }
 
                 };
+                
 
                 //popluate machpro zone
                 btn_MachProZone.Click += (s, e) => {
