@@ -134,13 +134,14 @@ namespace DockerTemplateCS1test
 
                             xl.Quit();
                         }
-
+                        int cursorToLabel = 0;
+                        int numPanelNames = 0;
                         //add the panel text at the top of the label
                         for (int j = 0; j < itemsList.Count(); j++)
                         {
-                            double numInputRecords = itemsList[0].recordsInputList.Count();
-                            double numOutputRecords = itemsList[0].recordsOutputList.Count();
-                            int numPanelNames = 0;
+                            int numPanelsPlaced = 0;
+                            double numInputRecords = itemsList[j].recordsInputList.Count();
+                            double numOutputRecords = itemsList[j].recordsOutputList.Count();
                             if (numInputRecords > numOutputRecords)
                             {
                                 numPanelNames = (int)(Math.Ceiling(numInputRecords / 12) );
@@ -150,9 +151,10 @@ namespace DockerTemplateCS1test
                                 numPanelNames = (int)(Math.Ceiling(numOutputRecords / 8));
                             }
                             x = 1.055;
-                            for (int h = 0; h < numPanelNames; h++)
+                            while (numPanelsPlaced < numPanelNames)
                             {
-                                if (h < 3)
+                                numPanelsPlaced++;
+                                if (cursorToLabel < 3)
                                 {
                                     y = 9.25;
                                 }
@@ -160,85 +162,89 @@ namespace DockerTemplateCS1test
                                 {
                                     y = 5.25;
                                 }
-                                if (h == 0)
+                                if (cursorToLabel == 0)
                                 {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[0].PanelName + " MACH-Pro-Sys 1", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].PanelName + " MACH-Pro-Sys 1", (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
 
                                 }
                                 else
                                 {
-                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[0].PanelName + " MACH-Pro-Point " + h, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].PanelName + " MACH-Pro-Point " + numPanelsPlaced, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, corel.cdrTriState.cdrTrue, 0, 0, (corel.cdrAlignment)0);
                                 }
                                 x += 2.678;
-                                if (h == 2)
+                                if (cursorToLabel == 2)
                                 {
                                     x = 1.055;
                                 }
-      
+                                cursorToLabel++;
                             }
 
                             //popluate inputs and output into the columns
-                            //for (int l = 0; l < 2; l++)
-                            //{
-                            //    x = 0.50;
-                            //    for (int j = 0; j < 3; j++)
-                            //    {
-                            //        if (l == 0)
-                            //        {
-                            //            y = 8.88;
-                            //        }
-                            //        else
-                            //        {
-                            //            y = 4.90;
-                            //        }
-                            //        for (int i = 0; i < 12; i++)
-                            //        {
-                            //            if (countInput < recordsInput.Count())
-                            //            {
-                            //                if (recordsInput[countInput] != "")
-                            //                {
-                            //                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsInput[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+                            for (int l = 0; l < 2; l++)
+                            {
 
-                            //                }
-                            //                countInput++;
-                            //                y -= 0.305;
+                                x = 0.50;
+                                for (int v = 0; v < 3; v++)
+                                {
+                                    if (l == 0)
+                                    {
+                                        y = 8.88;
+                                    }
+                                    else
+                                    {
+                                        y = 4.90;
+                                    }
+                                    for (int i = 0; i < 12; i++)
+                                    {
+                                        if (countInput < numInputRecords)
+                                        {
+                                            if (itemsList[j].recordsInputList[countInput] != "")
+                                            {
+                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].recordsInputList[countInput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
 
-                            //            }
-                            //        }
+                                            }
+                                            countInput++;
+                                            y -= 0.305;
 
-                            //        x += 1.078;
-                            //        if (l == 0)
-                            //        {
-                            //            y = 8.88;
-                            //        }
-                            //        else
-                            //        {
-                            //            y = 4.90;
-                            //        }
-                            //        //into 8 fields in output column
-                            //        for (int k = 0; k < 8; k++)
-                            //        {
-                            //            if (countOutput < recordsOutput.Count())
-                            //            {
-                            //                if (recordsOutput[countOutput] != "")
-                            //                {
-                            //                    this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, recordsOutput[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
-                            //                }
-                            //                countOutput++;
-                            //                y -= 0.395;
-                            //            }
-                            //        }
-                            //        x += 1.64;
-                            //    }
+                                        }
+                                    }
 
-                            //}
-                            //change page when the inputs/output are full
-                            //if (true)
-                            //{
+                                    x += 1.078;
+                                    if (l == 0)
+                                    {
+                                        y = 8.88;
+                                    }
+                                    else
+                                    {
+                                        y = 4.90;
+                                    }
+                                    //into 8 fields in output column
+                                    for (int k = 0; k < 8; k++)
+                                    {
+                                        if (countOutput < numOutputRecords)
+                                        {
+                                            if (itemsList[j].recordsOutputList[countOutput] != "")
+                                            {
+                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemsList[j].recordsOutputList[countOutput], (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 6, 0, 0, 0, (corel.cdrAlignment)0);
+                                            }
+                                            countOutput++;
+                                            y -= 0.395;
+                                        }
+                                    }
+                                    x += 1.64;
+                                }
 
-                            //}
-                            //this.corelApp.ActiveDocument.InsertPages(1, false, activePage);
-                            //pages[activePage++].Activate();
+                            }
+                            countInput = 0;
+                            countOutput = 0;
+                            //change page when the inputs / output are full
+                            if (cursorToLabel == 6)
+                            {
+                                cursorToLabel = 0;
+                                this.corelApp.ActiveDocument.InsertPages(1, false, activePage);
+                                pages[activePage+1].ActiveLayer.Paste();
+                                pages[++activePage].Activate();
+                            }
                         }
                         
                             System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
