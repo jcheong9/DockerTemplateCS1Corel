@@ -640,14 +640,7 @@ namespace DockerTemplateCS1test
                         Excel.Range cellWired;
 
                         //put panel number to coreldraw
-                        string buildingValue ="none";
-                        string panelValue ="none";
-                        string descValue ="none";
-                        string networkValue ="none";
-                        string bacnetIdValue ="none";
-                        string pointValue ="none";
-                        string tagNameValue ="none";
-                        string wireValue ="none";
+
                         for (int rowIndex = 2; rowIndex <= numRowsInput; rowIndex++)
                         {
                             cellBuilding = (Excel.Range)sheet.Cells[rowIndex, 1];
