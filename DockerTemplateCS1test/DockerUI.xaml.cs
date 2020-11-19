@@ -125,7 +125,7 @@ namespace DockerTemplateCS1test
                         int activePage = 1;
                         Pages pages = this.corelApp.ActiveDocument.Pages;
                         Layers allLayers = pages[activePage].Layers;
-                        //copy and paste to other pages
+                        //copy all the shapes in that layer
                         allLayers.Bottom.Shapes.All().Copy();
                         int numpg = filePaths.Length ;
 
@@ -273,6 +273,7 @@ namespace DockerTemplateCS1test
                             {
                                 cursorToLabel = 0;
                                 this.corelApp.ActiveDocument.InsertPages(1, false, activePage);
+                                //paste into active layer
                                 pages[activePage+1].ActiveLayer.Paste();
                                 pages[++activePage].Activate();
                             }
@@ -753,8 +754,37 @@ namespace DockerTemplateCS1test
 
 
                 };
+                //Paste on to multiple pages based on user selection
+                btn_PasteMultiPages.Click += (s, e) =>
+                {
+                    string textBoxInput = Microsoft.VisualBasic.Interaction.InputBox("Enter the page range \n example: 2-5,6,10-12", "Page Range", "Default Text");
+                    Pages pages = this.corelApp.ActiveDocument.Pages;
+                    string[] splitDelimitersInput = textBoxInput.Split(',');
+                    List<int> listOfPages = new List<int>();
+                    foreach (string input in splitDelimitersInput)
+                    {
+                        if (input.Contains("-"))
+                        {
+                            string[] splitStr = input.Split('-');
+                            for(int k = Int32.Parse(splitStr[0]);k <= Int32.Parse(splitStr[1]); k++)
+                            {
+                                listOfPages.Add(k);
+                            }
 
-            }
+                        }
+                        else
+                        {
+                            listOfPages.Add(Int32.Parse(input));
+                        }
+                    }
+                    for (int i = 0; i < listOfPages.Count; i++)
+                    {
+                        pages[listOfPages[i]].ActiveLayer.Paste();
+
+                    }
+                };
+
+                }
             catch
             {
                 global::System.Windows.MessageBox.Show("VGCore Erro");
