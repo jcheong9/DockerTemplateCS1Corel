@@ -381,7 +381,10 @@ namespace DockerTemplateCS1test
                                         {
                                             xI += 0.1624;
                                         }
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
+                                        else
+                                        {
+                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xI, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xI, yI);
+                                        }
                                         xI += 0.1624;
                                         empty = false;
                                     }
@@ -397,7 +400,11 @@ namespace DockerTemplateCS1test
                                             {
                                                 xO += 0.1624;
                                             }
-                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
+                                            else
+                                            {
+                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
+
+                                            }
                                             xO += 0.1624;
                                             empty = false;
                                         }
