@@ -366,7 +366,8 @@ namespace DockerTemplateCS1test
                             }
                             bool empty = false;
                             //put panel number to coreldraw
-                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xp, yp, cellPanelNumber.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xp, yp);
+                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xp-0.16, yp, cellPanelNumber.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xp, yp);
+                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xp-0.06, yp+1.5, cellPanelNumber.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 8, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xp, yp);
                             for (int rowIndex = 5; rowIndex <= numRowsInput; rowIndex++)
                             {
                                 cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
