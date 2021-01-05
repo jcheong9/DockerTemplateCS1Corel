@@ -316,7 +316,7 @@ namespace DockerTemplateCS1test
                         pages[activePage].Activate();
                         Microsoft.Office.Interop.Excel.Application xl = new Microsoft.Office.Interop.Excel.Application();
                         
-                        double xI = 2.17, xO, xp = 2.34, yp = 9, yI = 8.335, yO = 8.415, xSS, ySS;
+                        double xI = 2.17, xO, xp = 2.34, yp = 9, yI = 8.335, yO = 8.42, xSS, ySS;
                         int numMach = 0;
                         for (int i = 0; i < filePaths.Length; i++)
                         {
@@ -324,7 +324,7 @@ namespace DockerTemplateCS1test
                             {
                                 pages[++activePage].Activate();
                                 numMach = 0;
-                                yp = 9; yI = 8.335; yO = 8.415; ySS = 8.46;
+                                yp = 9; yI = 8.335; yO = 8.42; ySS = 8.46;
                                 countLabel = 0;
                             }
 
@@ -339,6 +339,7 @@ namespace DockerTemplateCS1test
 
                             Excel.Range cellInOut;
                             Excel.Range cellLabel;
+              
                             String strInOut;
 
 
@@ -361,7 +362,7 @@ namespace DockerTemplateCS1test
                             {
                                 yI = 8.335;
                                 yp = 9;
-                                yO = 8.415;
+                                yO = 8.42;
                                 ySS = 8.335;
                             }
                             bool empty = false;
@@ -372,6 +373,7 @@ namespace DockerTemplateCS1test
                             {
                                 cellInOut = (Excel.Range)sheet.Cells[rowIndex, 1];
                                 cellLabel = (Excel.Range)sheet.Cells[rowIndex, 2];
+             
                                 strInOut = cellInOut.Value;
 
                                 if (strInOut != null && cellLabel.Value != null)
@@ -393,7 +395,12 @@ namespace DockerTemplateCS1test
                                     {
                                         if (strInOut.ToLower().Contains('s'))
                                         {
-                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, yI);
+                                           this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, yI);
+                                            string ssPointValue = cellInOut.Value;
+                                            int length = ssPointValue.Length;
+                                            string ssPoint = ssPointValue.Substring(length - 3, 3);
+                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS + 0.005, yI - 0.185, ssPoint, (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS + 0.005, yI - 0.185);
+                                            
                                         }
                                         else
                                         {
@@ -403,7 +410,7 @@ namespace DockerTemplateCS1test
                                             }
                                             else
                                             {
-                                                this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
+                                               this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xO, yO, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xO, yO);
 
                                             }
                                             xO += 0.1624;
