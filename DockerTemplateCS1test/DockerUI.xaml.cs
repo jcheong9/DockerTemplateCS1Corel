@@ -596,8 +596,8 @@ namespace DockerTemplateCS1test
                         this.corelApp.Clipboard.Clear();
 
                         //copy the white kerr label on top
-                        pages.Last.Activate();
-                        allLayers = pages[2].Layers;
+                        //pages.Last.Activate();
+                        allLayers = pages.Last.Layers;
                         allLayers.Bottom.Shapes.All().Copy();
 
                         pages[activePg].Activate();
@@ -614,6 +614,7 @@ namespace DockerTemplateCS1test
                             {
                                 pages[activePg++].Activate();
                                 x = 1.64; y = 9.83;
+                                whitelabelx = 0; whitelabely = 0;
                             }
                             for (int i = 0; i < 16; i++)
                             {
@@ -636,9 +637,9 @@ namespace DockerTemplateCS1test
                                 countInput++;
                             }
                             x += 2.07;
+                            y = 9.83;
                             whitelabelx += 2.067;
                             whitelabely = 0;
-                            y = 9.83;
                         }
                     }
                 };
