@@ -18,6 +18,7 @@ using System.IO;
 using Corel.Interop.VGCore;
 
 
+
 namespace DockerTemplateCS1test
 {
     public partial class DockerUI : UserControl
@@ -591,13 +592,25 @@ namespace DockerTemplateCS1test
                             pages[activePg + j].ActiveLayer.Paste();
 
                         }
+                        //needs the clipboard to be clear indoor to copy
+                        this.corelApp.Clipboard.Clear();
+
+                        //copy the white kerr label on top
+                        pages.Last.Activate();
+                        allLayers = pages[2].Layers;
+                        allLayers.Bottom.Shapes.All().Copy();
 
                         pages[activePg].Activate();
+
+                        this.corelApp.ActiveDocument.ActiveLayer.Paste();
+                        //this.corelApp.ActiveDocument.ActiveLayer.Paste().Move(0, -0.5978);
+                        //this.corelApp.ActiveDocument.ActiveLayer.Paste().Move(2.067, 0);
+
                         //16 rows, 3 columns
-                        double x = 1.64, y= 9.83;
-                        for(int j = 0; j < numCol; j++)
+                        double x = 1.64, y = 9.83,whitelabelx = 0, whitelabely = 0 ;
+                        for (int j = 0; j < numCol; j++)
                         {
-                            if(j % 3 == 0)
+                            if (j % 3 == 0)
                             {
                                 pages[activePg++].Activate();
                                 x = 1.64; y = 9.83;
@@ -609,15 +622,22 @@ namespace DockerTemplateCS1test
                                     var item = records.ElementAt(countInput);
                                     string itemKey = item.Key;
                                     string itemValue = item.Value;
+                                    if (itemKey.Contains("SS"))
+                                    {
+                                        this.corelApp.ActiveDocument.ActiveLayer.Paste().Move(whitelabelx, whitelabely);
+                                    }
                                     this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemValue, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
                                     y -= 0.1;
                                     this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, itemKey, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 7, 0, 0, 0, (corel.cdrAlignment)3);
                                     y -= 0.498;
+                                    whitelabely -= 0.5978;
 
                                 }
                                 countInput++;
                             }
                             x += 2.07;
+                            whitelabelx += 2.067;
+                            whitelabely = 0;
                             y = 9.83;
                         }
                     }
