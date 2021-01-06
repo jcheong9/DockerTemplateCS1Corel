@@ -396,11 +396,11 @@ namespace DockerTemplateCS1test
                                     {
                                         if (strInOut.ToLower().Contains('s'))
                                         {
-                                           this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, yI);
+                                            //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS, yI, cellLabel.Value, (corel.cdrTextLanguage)1033, 0, "Swis721 Cn BT", 5, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS, yI);
                                             string ssPointValue = cellInOut.Value;
                                             int length = ssPointValue.Length;
                                             string ssPoint = ssPointValue.Substring(length - 3, 3);
-                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS + 0.005, yI - 0.185, ssPoint, (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS + 0.005, yI - 0.185);
+                                            //this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xSS + 0.005, yI - 0.185, ssPoint, (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1).RotateEx(90.0, xSS + 0.005, yI - 0.185);
                                             
                                         }
                                         else
@@ -603,8 +603,7 @@ namespace DockerTemplateCS1test
                         pages[activePg].Activate();
 
                         this.corelApp.ActiveDocument.ActiveLayer.Paste();
-                        //this.corelApp.ActiveDocument.ActiveLayer.Paste().Move(0, -0.5978);
-                        //this.corelApp.ActiveDocument.ActiveLayer.Paste().Move(2.067, 0);
+
 
                         //16 rows, 3 columns
                         double x = 1.64, y = 9.83,whitelabelx = 0, whitelabely = 0 ;
@@ -644,7 +643,7 @@ namespace DockerTemplateCS1test
                     }
                 };
 
-                //makes tags
+                //makes DEVICE tags
                 btn_TAGS.Click += (s, e) =>
                 {
                     var buildingValueList = new List<string>();
@@ -792,17 +791,15 @@ namespace DockerTemplateCS1test
 
 
                 };
-                //makes tags for V2
+                //makes panel tags
                 btn_Panel_Tags.Click += (s, e) =>
                 {
-                    var buildingValueList = new List<string>();
-                    var panelValueValueList = new List<string>();
-                    var descValueValueList = new List<string>();
-                    var networkValueList = new List<string>();
-                    var bacnetIdValueList = new List<string>();
-                    var pointValueList = new List<string>();
-                    var tagNameValueList = new List<string>();
-                    var wireValueList = new List<string>();
+                    var descriptionValueList = new List<string>();
+                    var controllerTypeValueList = new List<string>();
+                    var deviceIDValueList = new List<string>();
+                    var MACAddressValueList = new List<string>();
+                    var baudRateValueList = new List<string>();
+
                     System.Windows.Forms.OpenFileDialog folderBrowser = new System.Windows.Forms.OpenFileDialog();
 
                     folderBrowser.InitialDirectory = "c:\\";
@@ -817,48 +814,36 @@ namespace DockerTemplateCS1test
                         Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Sheets[1];
                         int numRowsInput = sheet.UsedRange.Rows.Count;
 
-                        Excel.Range cellBuilding;
-                        Excel.Range cellPanel;
-                        Excel.Range cellDesc;
-                        Excel.Range cellNetwork;
-                        Excel.Range cellBacnetID;
-                        Excel.Range cellPoints;
-                        Excel.Range cellTagName;
-                        Excel.Range cellWired;
+                        Excel.Range cellDescription;
+                        Excel.Range cellControllerType;
+                        Excel.Range cellDeviceID;
+                        Excel.Range cellMACAddress;
+                        Excel.Range cellBaudRate;
+
 
                         //put panel number to coreldraw
 
                         for (int rowIndex = 2; rowIndex <= numRowsInput; rowIndex++)
                         {
-                            cellBuilding = (Excel.Range)sheet.Cells[rowIndex, 1];
-                            cellPanel = (Excel.Range)sheet.Cells[rowIndex, 2];
-                            cellDesc = (Excel.Range)sheet.Cells[rowIndex, 3];
-                            cellNetwork = (Excel.Range)sheet.Cells[rowIndex, 4];
-                            cellBacnetID = (Excel.Range)sheet.Cells[rowIndex, 5];
-                            cellPoints = (Excel.Range)sheet.Cells[rowIndex, 6];
-                            cellTagName = (Excel.Range)sheet.Cells[rowIndex, 7];
-                            cellWired = (Excel.Range)sheet.Cells[rowIndex, 8];
-
-
+                            cellDescription = (Excel.Range)sheet.Cells[rowIndex, 1];
+                            cellControllerType = (Excel.Range)sheet.Cells[rowIndex, 2];
+                            cellDeviceID = (Excel.Range)sheet.Cells[rowIndex, 3];
+                            cellMACAddress = (Excel.Range)sheet.Cells[rowIndex, 4];
+                            cellBaudRate = (Excel.Range)sheet.Cells[rowIndex, 5];
 
                             //add a space between the number and letter
-                            buildingValueList.Add(Convert.ToString(cellBuilding.Value));
-                            panelValueValueList.Add(Convert.ToString(cellPanel.Value));
-                            descValueValueList.Add(Convert.ToString(cellDesc.Value));
-                            networkValueList.Add(Convert.ToString(cellNetwork.Value));
-                            bacnetIdValueList.Add(Convert.ToString(cellBacnetID.Value));
-                            pointValueList.Add(Convert.ToString(cellPoints.Value));
-                            tagNameValueList.Add(Convert.ToString(cellTagName.Value));
-                            wireValueList.Add(Convert.ToString(cellWired.Value));
+                            descriptionValueList.Add(Convert.ToString(cellDescription.Value));
+                            controllerTypeValueList.Add(Convert.ToString(cellControllerType.Value));
+                            deviceIDValueList.Add(Convert.ToString(cellDeviceID.Value));
+                            MACAddressValueList.Add(Convert.ToString(cellMACAddress.Value));
+                            baudRateValueList.Add(Convert.ToString(cellBaudRate.Value));
 
                         }
 
                         xl.Quit();
                         System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
 
-
-
-                        int recCount = buildingValueList.Count();
+                        int recCount = descriptionValueList.Count();
                         int activePg = 1;
                         Pages pages = this.corelApp.ActiveDocument.Pages;
 
@@ -866,7 +851,7 @@ namespace DockerTemplateCS1test
                         //copy and paste to other pages
                         allLayers.Bottom.Shapes.All().Copy();
                         //number of columns
-                        int numPg = (int)(Math.Ceiling(recCount / 12.0) - 1);
+                        int numPg = (int)(Math.Ceiling(recCount / 5.0) - 1);
 
                         this.corelApp.ActiveDocument.InsertPages(numPg, false, activePg);
                         for (int j = 1; j < numPg + 1; j++)
@@ -874,68 +859,29 @@ namespace DockerTemplateCS1test
                             pages[activePg + j].ActiveLayer.Paste();
 
                         }
+
+                        string strText;
                         int recordIndex = 0;
+
+                        double x = 0.65, y = 6.75;
                         for (int p = 0; p < numPg + 1; p++)
                         {
-                            double y = 9.105;
+                            y = 6.75;
                             pages[activePg++].Activate();
-                            for (int k = 0; k < 3; k++)
+
+                            for (int i = 0; i < 5; i++)
                             {
-                                double x = 1.10, xMid = 1.2, xBottom = 0.8;
-
-                                for (int i = 0; i < 4; i++)
+                                if (recordIndex != recCount)
                                 {
-                                    switch (k)
-                                    {
-                                        case 0:
-                                            y = 9.105;
-                                            break;
-                                        case 1:
-                                            y = 5.655;
-                                            break;
-                                        case 2:
-                                            y = 2.205;
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    if (recordIndex < buildingValueList.Count())
-                                    {
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, buildingValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                                        y = y - 0.095;
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, panelValueValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                                        y = y - 0.095;
-                                        if (descValueValueList[recordIndex] != null)
-                                        {
-                                            this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(x, y, descValueValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                                        }
-                                        //put the text at network and bacnet id white boxes
-                                        y = y - 0.4;
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xMid, y, networkValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
-                                        y = y - 0.155;
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xMid, y, bacnetIdValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 9, 0, 0, 0, (corel.cdrAlignment)1);
-
-                                        //point, name, and wired white boxes
-                                        y = y - 0.445;
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xBottom, y, pointValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                                        y = y - 0.18;
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xBottom, y, tagNameValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-                                        y = y - 0.18;
-                                        this.corelApp.ActiveDocument.ActiveLayer.CreateArtisticText(xBottom, y, wireValueList[recordIndex], (corel.cdrTextLanguage)1033, 0, "Swis721 BT", 7, 0, 0, 0, (corel.cdrAlignment)1);
-
-                                        recordIndex++;
-                                        x = x + 2.02;
-                                        xMid = xMid + 2.02;
-                                        xBottom = xBottom + 2.02;
-
-                                    }
+                                    strText = "Description: " + descriptionValueList[recordIndex] + "\r\n" + "Controller Type: " + controllerTypeValueList[recordIndex] + "\r\n" + "Bacnet Device ID: " + deviceIDValueList[recordIndex] + "\r\n" + "MAC Address: " + MACAddressValueList[recordIndex] + "\r\n" + "Baud Rate: " + baudRateValueList[recordIndex];
+                                    this.corelApp.ActiveDocument.ActiveLayer.CreateParagraphText(2, 2, 5.2, 3.5, strText, (corel.cdrTextLanguage)1033, corel.cdrTextCharSet.cdrCharSetDefault, "Arial", 9, 0, 0, 0, 0).Move(x, y);
+                                    y -= 2.07;
+                                    recordIndex++;
 
                                 }
                             }
 
                         }
-
-
                     }
 
 
