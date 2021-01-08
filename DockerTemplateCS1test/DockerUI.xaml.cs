@@ -564,7 +564,7 @@ namespace DockerTemplateCS1test
                                 if (Convert.ToString(cellLabel.Value) != null)
                                 {
                                     //add a space between the number and letter
-                                    strLabel = "[P" + Convert.ToString(cellInOut.Value) + "]";
+                                    strLabel = "[" + Convert.ToString(cellInOut.Value) + "]";
                                     records.Add(strLabel, Convert.ToString(cellLabel.Value));
 
                                 }
@@ -602,7 +602,7 @@ namespace DockerTemplateCS1test
 
                         pages[activePg].Activate();
 
-                        this.corelApp.ActiveDocument.ActiveLayer.Paste();
+                        //this.corelApp.ActiveDocument.ActiveLayer.Paste();
 
 
                         //16 rows, 3 columns
